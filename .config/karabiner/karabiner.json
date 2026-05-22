@@ -1,0 +1,329 @@
+{
+  "profiles": [
+    {
+      "complex_modifications": {
+        "rules": [
+          {
+            "description": "Ctrl + Space → Cmd + Space in VSCode",
+            "manipulators": [
+              {
+                "conditions": [
+                  {
+                    "bundle_identifiers": [
+                      "^com\\.microsoft\\.VSCode$",
+                      "^com\\.googlecode\\.iterm2$",
+                      "^com\\.mitchellh\\.ghostty$"
+                    ],
+                    "type": "frontmost_application_if"
+                  }
+                ],
+                "from": {
+                  "key_code": "spacebar",
+                  "modifiers": { "mandatory": ["control"] }
+                },
+                "to": [
+                  {
+                    "key_code": "spacebar",
+                    "modifiers": ["command"]
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
+          },
+          {
+            "description": "Swap Ctrl + V ⇔ Cmd + V in Ghostty",
+            "manipulators": [
+              {
+                "conditions": [
+                  {
+                    "bundle_identifiers": ["^com\\.mitchellh\\.ghostty$"],
+                    "type": "frontmost_application_if"
+                  }
+                ],
+                "from": {
+                  "key_code": "v",
+                  "modifiers": { "mandatory": ["control"] }
+                },
+                "to": [
+                  {
+                    "key_code": "v",
+                    "modifiers": ["command"]
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "conditions": [
+                  {
+                    "bundle_identifiers": ["^com\\.mitchellh\\.ghostty$"],
+                    "type": "frontmost_application_if"
+                  }
+                ],
+                "from": {
+                  "key_code": "v",
+                  "modifiers": { "mandatory": ["command"] }
+                },
+                "to": [
+                  {
+                    "key_code": "v",
+                    "modifiers": ["control"]
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
+          },
+          {
+            "description": "Swap Command ⌘ and Control ⌃ except in VSCode, iTerm2, and Ghostty",
+            "manipulators": [
+              {
+                "conditions": [
+                  {
+                    "bundle_identifiers": [
+                      "^com\\.microsoft\\.VSCode$",
+                      "^com\\.googlecode\\.iterm2$",
+                      "^com\\.mitchellh\\.ghostty$"
+                    ],
+                    "type": "frontmost_application_unless"
+                  }
+                ],
+                "from": { "key_code": "left_command" },
+                "to": [{ "key_code": "left_control" }],
+                "type": "basic"
+              },
+              {
+                "conditions": [
+                  {
+                    "bundle_identifiers": [
+                      "^com\\.microsoft\\.VSCode$",
+                      "^com\\.googlecode\\.iterm2$",
+                      "^com\\.mitchellh\\.ghostty$"
+                    ],
+                    "type": "frontmost_application_unless"
+                  }
+                ],
+                "from": { "key_code": "left_control" },
+                "to": [{ "key_code": "left_command" }],
+                "type": "basic"
+              },
+              {
+                "conditions": [
+                  {
+                    "bundle_identifiers": [
+                      "^com\\.microsoft\\.VSCode$",
+                      "^com\\.googlecode\\.iterm2$",
+                      "^com\\.mitchellh\\.ghostty$"
+                    ],
+                    "type": "frontmost_application_unless"
+                  }
+                ],
+                "from": { "key_code": "right_command" },
+                "to": [{ "key_code": "right_control" }],
+                "type": "basic"
+              },
+              {
+                "conditions": [
+                  {
+                    "bundle_identifiers": [
+                      "^com\\.microsoft\\.VSCode$",
+                      "^com\\.googlecode\\.iterm2$",
+                      "^com\\.mitchellh\\.ghostty$"
+                    ],
+                    "type": "frontmost_application_unless"
+                  }
+                ],
+                "from": { "key_code": "right_control" },
+                "to": [{ "key_code": "right_command" }],
+                "type": "basic"
+              }
+            ]
+          },
+          {
+            "description": "VS Codeでのみ Ctrl + Click を Cmd + Click に変換(マウスのModify EventsをOnにする必要あり)",
+            "manipulators": [
+              {
+                "conditions": [
+                  {
+                    "bundle_identifiers": ["^com\\.microsoft\\.VSCode$"],
+                    "type": "frontmost_application_if"
+                  }
+                ],
+                "from": {
+                  "modifiers": { "mandatory": ["control"] },
+                  "pointing_button": "button1"
+                },
+                "to": [
+                  {
+                    "modifiers": ["command"],
+                    "pointing_button": "button1"
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
+          }
+        ]
+      },
+      "devices": [
+        {
+          "identifiers": {
+            "is_keyboard": true,
+            "product_id": 555,
+            "vendor_id": 5426
+          },
+          "simple_modifications": [
+            {
+              "from": { "key_code": "1" },
+              "to": [{ "key_code": "escape" }]
+            },
+            {
+              "from": { "key_code": "caps_lock" },
+              "to": [{ "key_code": "0" }]
+            },
+            {
+              "from": { "key_code": "down_arrow" },
+              "to": [{ "key_code": "7" }]
+            },
+            {
+              "from": { "key_code": "tab" },
+              "to": [{ "key_code": "9" }]
+            },
+            {
+              "from": { "key_code": "up_arrow" },
+              "to": [{ "key_code": "8" }]
+            }
+          ]
+        },
+        {
+          "identifiers": {
+            "is_keyboard": true,
+            "product_id": 591,
+            "vendor_id": 1452
+          },
+          "simple_modifications": [
+            {
+              "from": { "key_code": "caps_lock" },
+              "to": [{ "key_code": "left_control" }]
+            }
+          ]
+        },
+        {
+          "identifiers": {
+            "is_pointing_device": true,
+            "product_id": 641,
+            "vendor_id": 1452
+          },
+          "simple_modifications": [
+            {
+              "from": { "key_code": "backslash" },
+              "to": [{ "key_code": "delete_or_backspace" }]
+            },
+            {
+              "from": { "key_code": "delete_forward" },
+              "to": [{ "key_code": "backslash" }]
+            }
+          ]
+        },
+        {
+          "identifiers": {
+            "is_keyboard": true,
+            "product_id": 668,
+            "vendor_id": 76
+          },
+          "simple_modifications": [
+            {
+              "from": { "key_code": "caps_lock" },
+              "to": [{ "key_code": "left_control" }]
+            }
+          ]
+        },
+        {
+          "identifiers": {
+            "is_keyboard": true,
+            "product_id": 64020,
+            "vendor_id": 9639
+          },
+          "simple_modifications": [
+            {
+              "from": { "key_code": "delete_forward" },
+              "to": [{ "key_code": "grave_accent_and_tilde" }]
+            },
+            {
+              "from": { "key_code": "grave_accent_and_tilde" },
+              "to": [{ "key_code": "delete_forward" }]
+            },
+            {
+              "from": { "key_code": "page_down" },
+              "to": [{ "key_code": "end" }]
+            },
+            {
+              "from": { "key_code": "page_up" },
+              "to": [{ "key_code": "home" }]
+            }
+          ]
+        },
+        {
+          "identifiers": {
+            "is_keyboard": true,
+            "product_id": 33,
+            "vendor_id": 1278
+          },
+          "simple_modifications": [
+            {
+              "from": { "key_code": "left_command" },
+              "to": [{ "key_code": "left_option" }]
+            },
+            {
+              "from": { "key_code": "left_option" },
+              "to": [{ "key_code": "left_command" }]
+            },
+            {
+              "from": { "key_code": "right_command" },
+              "to": [{ "key_code": "right_option" }]
+            },
+            {
+              "from": { "key_code": "right_option" },
+              "to": [{ "key_code": "right_command" }]
+            }
+          ]
+        },
+        {
+          "identifiers": {
+            "is_keyboard": true,
+            "product_id": 16386,
+            "vendor_id": 12625
+          },
+          "simple_modifications": [
+            {
+              "from": { "key_code": "delete_forward" },
+              "to": [{ "key_code": "end" }]
+            },
+            {
+              "from": { "key_code": "grave_accent_and_tilde" },
+              "to": [{ "key_code": "home" }]
+            }
+          ]
+        },
+        {
+          "identifiers": {
+            "is_keyboard": true,
+            "is_pointing_device": true,
+            "product_id": 45091,
+            "vendor_id": 1133
+          },
+          "ignore": false
+        }
+      ],
+      "name": "Default profile",
+      "selected": true,
+      "simple_modifications": [
+        {
+          "from": { "key_code": "caps_lock" },
+          "to": [{ "key_code": "left_control" }]
+        }
+      ],
+      "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
+    }
+  ]
+}

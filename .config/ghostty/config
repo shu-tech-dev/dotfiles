@@ -1,0 +1,19 @@
+# Theme
+# theme = "github dark"
+background-opacity = 0.7
+background-blur-radius = 20
+
+# Font
+font-family = "PlemolJP Console NF"
+
+# Title bar
+macos-titlebar-proxy-icon = hidden
+## macos-titlebar-style = hidden
+
+# Window size
+window-height = 40
+window-width = 150
+
+# Cursor
+cursor-style-blink = true
+

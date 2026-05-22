@@ -1,0 +1,20 @@
+.DS_Store
+*.log
+*.swp
+
+# secrets
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.pfx
+credentials*
+.npmrc
+.aws/
+secrets/
+.history
+*.local.*
+
+karabiner/*
+!karabiner/karabiner.json

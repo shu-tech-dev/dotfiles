@@ -1,0 +1,26 @@
+[
+  {
+    "pkg":      "claude-code",
+    "name":     "Claude Code",
+    "desc":     "Anthropic's official coding AI CLI",
+    "method":   "brew",
+    "yolo_cmd": "claude --dangerously-skip-permissions",
+    "mounts":   ["$HOME/.claude", "$HOME/.claude.json"]
+  },
+  {
+    "pkg":      "gemini-cli",
+    "name":     "Gemini CLI",
+    "desc":     "Google's AI CLI",
+    "method":   "brew",
+    "yolo_cmd": "gemini --yolo",
+    "mounts":   ["$HOME/.gemini"]
+  },
+  {
+    "pkg":      "codex",
+    "name":     "Codex CLI",
+    "desc":     "OpenAI's coding AI CLI",
+    "method":   "npm:@openai/codex",
+    "yolo_cmd": "codex --approval-mode full-auto",
+    "mounts":   []
+  }
+]

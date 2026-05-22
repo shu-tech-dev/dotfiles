@@ -1,0 +1,21 @@
+format = """
+[\ue0b6](#475569)\
+$directory\
+[\ue0b0](fg:#475569 bg:#94A3B8)\
+$git_branch\
+$git_status\
+[\ue0b0](#94A3B8)\
+[ ](bold)"""
+
+[directory]
+style = "bg:#475569 fg:#E2E8F0"
+format = "[ $path ]($style)"
+
+[git_branch]
+style = "bg:#94A3B8 fg:#1E293B"
+format = "[ $branch ]($style)"
+truncation_length = 20
+
+[git_status]
+style = "bg:#94A3B8 fg:#1E293B"
+format = "[$all_status$ahead_behind]($style)"

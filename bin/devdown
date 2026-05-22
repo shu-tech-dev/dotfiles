@@ -1,0 +1,31 @@
+#!/bin/bash
+
+SESSION="${1:-dev-$(basename "$PWD")-$(echo "$PWD" | md5sum | cut -c1-6)}"
+
+# カレントディレクトリに対応するセッションが存在しない場合は一覧から選択
+if ! tmux has-session -t "$SESSION" 2>/dev/null; then
+  DEV_SESSIONS=$(tmux ls 2>/dev/null | grep "^dev-" | cut -d: -f1)
+
+  if [ -z "$DEV_SESSIONS" ]; then
+    echo "No dev sessions found."
+    exit 1
+  fi
+
+  echo "Session not found for current directory. Running dev sessions:"
+  echo "$DEV_SESSIONS" | nl -w2 -s") "
+
+  read -rp "Select session number (or type session name): " INPUT
+
+  if echo "$INPUT" | grep -qE '^[0-9]+$'; then
+    SESSION=$(echo "$DEV_SESSIONS" | sed -n "${INPUT}p")
+  else
+    SESSION="$INPUT"
+  fi
+
+  if [ -z "$SESSION" ]; then
+    echo "Invalid selection."
+    exit 1
+  fi
+fi
+
+tmux kill-session -t "$SESSION" 2>/dev/null && echo "'$SESSION' session closed." || echo "Session '$SESSION' not found."

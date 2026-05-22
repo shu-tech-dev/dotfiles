@@ -1,0 +1,20 @@
+[
+  {
+    "pkg":         "ghostty",
+    "name":        "Ghostty",
+    "desc":        "Fast, feature-rich terminal emulator",
+    "method":      "brew-cask",
+    "platforms":   ["macos"],
+    "symlink_src": "~/dotfiles/.config/ghostty",
+    "symlink_dst": "~/.config/ghostty"
+  },
+  {
+    "pkg":         "karabiner-elements",
+    "name":        "Karabiner-Elements",
+    "desc":        "Keyboard customizer for macOS",
+    "method":      "brew-cask",
+    "platforms":   ["macos"],
+    "symlink_src": "~/dotfiles/.config/karabiner/karabiner.json",
+    "symlink_dst": "~/.config/karabiner/karabiner.json"
+  }
+]

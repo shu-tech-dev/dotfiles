@@ -1,0 +1,14 @@
+{
+  "servers": [
+    "ts_ls",
+    "lua_ls",
+    "pyright",
+    "biome"
+  ],
+  "tools": [
+    "stylua",
+    "prettier",
+    "ruff",
+    "biome"
+  ]
+}
