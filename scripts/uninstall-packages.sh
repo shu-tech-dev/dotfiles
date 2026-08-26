@@ -5,89 +5,74 @@
 
 # マニフェストが無い場合の候補: Brewfile と ai-tools.json に載っていて、
 # かつ現在インストール済みのものだけを出す
-_fallback_brew_candidates() {
-  {
-    sed -n 's/^brew "\([^"]*\)".*/\1/p' "$DOTFILES_DIR/packages/Brewfile" 2>/dev/null
-    if command -v jq &>/dev/null; then
-      jq -r '.[] | select(.method == "brew") | .pkg' \
-        "$DOTFILES_DIR/packages/ai-tools.json" 2>/dev/null
-    fi
-  } | awk '!seen[$0]++' | while IFS= read -r p; do
-    brew list --formula "$p" &>/dev/null && echo "$p"
-  done
+# マニフェストが無い場合の候補。
+# 型ごとに情報源が違う（Brewfile / ai-tools.json / optional-apps.json）ので
+# ここだけは型別のままにする。file は推測しようがないので候補を出さない。
+_fallback_candidates() {
+  command -v jq &>/dev/null || [ "$1" = "brew" ] || return 0
+
+  case "$1" in
+    brew)
+      {
+        sed -n 's/^brew "\([^"]*\)".*/\1/p' "$DOTFILES_DIR/packages/Brewfile" 2>/dev/null
+        if command -v jq &>/dev/null; then
+          jq -r '.[] | select(.method == "brew") | .pkg' \
+            "$DOTFILES_DIR/packages/ai-tools.json" 2>/dev/null
+        fi
+      } | awk '!seen[$0]++' | while IFS= read -r p; do
+        brew list --formula "$p" &>/dev/null && echo "$p"
+      done
+      ;;
+    cask)
+      jq -r '.[] | select(.method == "brew-cask") | .pkg' \
+        "$DOTFILES_DIR/packages/optional-apps.json" "$DOTFILES_DIR/packages/ai-tools.json" 2>/dev/null |
+        awk '!seen[$0]++' | while IFS= read -r p; do
+          brew list --cask "$p" &>/dev/null && echo "$p"
+        done
+      ;;
+    npm)
+      jq -r '.[] | select(.method | startswith("npm:")) | .method | sub("^npm:"; "")' \
+        "$DOTFILES_DIR/packages/ai-tools.json" 2>/dev/null | while IFS= read -r p; do
+        npm list -g --depth=0 "$p" &>/dev/null && echo "$p"
+      done
+      ;;
+  esac
 }
 
-_fallback_cask_candidates() {
-  command -v jq &>/dev/null || return 0
-  jq -r '.[] | select(.method == "brew-cask") | .pkg' \
-    "$DOTFILES_DIR/packages/optional-apps.json" 2>/dev/null | while IFS= read -r p; do
-    brew list --cask "$p" &>/dev/null && echo "$p"
-  done
-}
+# マニフェストに記録されたパッケージを型ごとに削除する。
+#
+# brew / cask / npm / file は「対象を取る→まだ残っているか確認→消す」で
+# 手順が完全に同じなので、違いは packages.sh のテーブルに閉じ込めてある。
+# 型ごとに関数を書き分けると、方式を足すたびに install 側と両方を直すことになり、
+# 実際それが原因で cask が uninstall から漏れていた。
+uninstall_recorded_packages() {
+  local type targets value
 
-_fallback_npm_candidates() {
-  command -v jq &>/dev/null || return 0
-  jq -r '.[] | select(.method | startswith("npm:")) | .method | sub("^npm:"; "")' \
-    "$DOTFILES_DIR/packages/ai-tools.json" 2>/dev/null | while IFS= read -r p; do
-    npm list -g --depth=0 "$p" &>/dev/null && echo "$p"
-  done
-}
+  for type in brew cask npm file; do
+    section "Uninstalling $(pkg_type_label "$type")"
 
-uninstall_brew_formulae() {
-  section "Uninstalling brew formulae"
-
-  if ! command -v brew &>/dev/null; then
-    skip "brew not found"
-    return
-  fi
-
-  local targets pkg
-  targets=$(resolve_targets brew "brew formulae" "$(_fallback_brew_candidates)")
-
-  if [ -z "$targets" ]; then
-    skip "no formulae selected"
-    return
-  fi
-
-  while IFS= read -r pkg; do
-    [ -n "$pkg" ] || continue
-    if ! brew list --formula "$pkg" &>/dev/null; then
-      skip "$pkg (not installed)"
+    if ! pkg_type_requires "$type"; then
+      skip "required command not found"
       continue
     fi
-    step "uninstalling formula $pkg"
-    # --ignore-dependencies は付けない。
-    # 他が依存していれば brew 側が拒否してくれるので、それを安全弁として使う。
-    run brew uninstall "$pkg" ||
-      warn "$pkg left installed (still required by something else)"
-  done <<< "$targets"
-}
 
-uninstall_brew_casks() {
-  section "Uninstalling brew casks"
-
-  if ! command -v brew &>/dev/null; then
-    skip "brew not found"
-    return
-  fi
-
-  local targets pkg
-  targets=$(resolve_targets cask "brew casks" "$(_fallback_cask_candidates)")
-
-  if [ -z "$targets" ]; then
-    skip "no casks selected"
-    return
-  fi
-
-  while IFS= read -r pkg; do
-    [ -n "$pkg" ] || continue
-    if ! brew list --cask "$pkg" &>/dev/null; then
-      skip "$pkg (not installed)"
+    targets=$(resolve_targets "$type" "$(pkg_type_label "$type")" "$(_fallback_candidates "$type")")
+    if [ -z "$targets" ]; then
+      skip "no $(pkg_type_label "$type") selected"
       continue
     fi
-    step "uninstalling cask $pkg"
-    run brew uninstall --cask "$pkg" || warn "failed to uninstall cask $pkg"
-  done <<< "$targets"
+
+    while IFS= read -r value; do
+      [ -n "$value" ] || continue
+      if ! pkg_type_exists "$type" "$value"; then
+        skip "$value (not installed)"
+        continue
+      fi
+      step "removing $value"
+      pkg_type_remove "$type" "$value" ||
+        warn "$value left in place (still required by something else, or removal failed)"
+    done <<< "$targets"
+  done
 }
 
 # 依存として一緒に入ったformulaは brew autoremove に任せる。
@@ -107,48 +92,6 @@ sweep_brew_orphans() {
   run brew autoremove
 }
 
-uninstall_npm_globals() {
-  section "Uninstalling global npm packages"
-
-  if ! command -v npm &>/dev/null; then
-    skip "npm not found"
-    return
-  fi
-
-  local targets pkg
-  targets=$(resolve_targets npm "global npm packages" "$(_fallback_npm_candidates)")
-
-  if [ -z "$targets" ]; then
-    skip "no npm packages selected"
-    return
-  fi
-
-  while IFS= read -r pkg; do
-    [ -n "$pkg" ] || continue
-    step "uninstalling npm package $pkg"
-    run npm uninstall -g "$pkg" || warn "failed to uninstall $pkg"
-  done <<< "$targets"
-}
-
-# install.sh が自分で決めたパスに置いた実ファイル（win32yank など）を消す
-remove_installed_files() {
-  local files f
-  files=$(manifest_values file)
-  [ -n "$files" ] || return 0
-
-  section "Removing files installed by dotfiles"
-  while IFS= read -r f; do
-    [ -n "$f" ] || continue
-    if [ ! -e "$f" ]; then
-      skip "$f (already gone)"
-      continue
-    fi
-    confirm "remove $f?" || continue
-    step "removing $f"
-    run rm -f "$f"
-  done <<< "$files"
-}
-
 # 独自インストーラで入れたものは削除手順がツール固有なので、案内だけ出す
 report_manual_tools() {
   local tools
@@ -163,11 +106,8 @@ report_manual_tools() {
 }
 
 uninstall_packages() {
-  uninstall_brew_formulae
-  uninstall_brew_casks
+  uninstall_recorded_packages
   sweep_brew_orphans
-  uninstall_npm_globals
-  remove_installed_files
   report_manual_tools
 }
 

@@ -1,0 +1,10 @@
+[
+  {
+    "pkg":       "win32yank",
+    "name":      "win32yank",
+    "desc":      "Clipboard bridge between WSL and Windows",
+    "method":    "archive:https://github.com/equalsraf/win32yank/releases/latest/download/win32yank-x64.zip",
+    "platforms": ["wsl"],
+    "paths":     ["$HOME/.local/bin/win32yank.exe"]
+  }
+]

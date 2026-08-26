@@ -1,26 +1,21 @@
 [
   {
-    "pkg":      "claude-code",
-    "name":     "Claude Code",
-    "desc":     "Anthropic's official coding AI CLI",
-    "method":   "brew",
-    "yolo_cmd": "claude --dangerously-skip-permissions",
-    "mounts":   ["$HOME/.claude", "$HOME/.claude.json"]
+    "pkg":    "claude-code",
+    "name":   "Claude Code",
+    "desc":   "Anthropic's official coding AI CLI",
+    "method": "brew-cask"
   },
   {
-    "pkg":      "antigravity-cli",
-    "name":     "Antigravity CLI",
-    "desc":     "Google Antigravity CLI",
-    "method":   "brew",
-    "yolo_cmd": "agy --dangerously-skip-permissions",
-    "mounts":   ["$HOME/.gemini"]
+    "pkg":    "antigravity-cli",
+    "name":   "Antigravity CLI",
+    "desc":   "Google Antigravity CLI",
+    "method": "brew-cask"
   },
   {
-    "pkg":      "codex",
-    "name":     "Codex CLI",
-    "desc":     "OpenAI's coding AI CLI",
-    "method":   "npm:@openai/codex",
-    "yolo_cmd": "codex --approval-mode full-auto",
-    "mounts":   []
+    "pkg":    "codex",
+    "name":   "Codex CLI",
+    "desc":   "OpenAI's coding AI CLI",
+    "method": "curl:https://chatgpt.com/codex/install.sh",
+    "paths":  ["$HOME/.local/bin/codex", "$HOME/.local/bin/codex-code-mode-host", "$HOME/.codex/packages"]
   }
 ]

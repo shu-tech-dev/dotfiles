@@ -9,6 +9,9 @@ export DOTFILES_DIR="$SCRIPT_DIR"
 source "$SCRIPT_DIR/scripts/manifest.sh"
 manifest_init
 
+# インストール方式の定義（install と uninstall で共有する）
+source "$SCRIPT_DIR/scripts/packages.sh"
+
 # OS判定してOS別スクリプトを実行
 case "$(uname -s)" in
   Darwin)

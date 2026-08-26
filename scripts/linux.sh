@@ -28,17 +28,8 @@ append_rc_line "$HOME/.bashrc" \
 # brew bundle（新規に入ったformulaだけがマニフェストに記録される）
 run_brew_bundle "$SCRIPT_DIR/packages/Brewfile"
 
-# WSLではNeovimがWindowsのクリップボードを読み書きするのにwin32yankが要る。
-# 無いとNeovimはclip.exe経由にフォールバックし、UTF-8非対応で日本語が化ける。
-if grep -qi microsoft /proc/version && ! command -v win32yank.exe &>/dev/null; then
-  curl -fsSL -o /tmp/win32yank.zip \
-    https://github.com/equalsraf/win32yank/releases/latest/download/win32yank-x64.zip
-  # 展開に失敗したときPATH上に0バイトのexeを残さないよう、成功してから配置する
-  unzip -p /tmp/win32yank.zip win32yank.exe > /tmp/win32yank.exe
-  install -Dm755 /tmp/win32yank.exe "$HOME/.local/bin/win32yank.exe"
-  rm -f /tmp/win32yank.zip /tmp/win32yank.exe
-  manifest_record file "$HOME/.local/bin/win32yank.exe"
-fi
+# このプラットフォームで必須のツール（WSLならwin32yankなど）
+pkg_install_required "$SCRIPT_DIR/packages/tools.json"
 
 source "$SCRIPT_DIR/scripts/ai-tools.sh"
 select_and_install_ai_tools

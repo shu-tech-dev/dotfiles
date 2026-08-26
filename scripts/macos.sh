@@ -29,5 +29,8 @@ fi
 # brew bundle（新規に入ったformulaだけがマニフェストに記録される）
 run_brew_bundle "$SCRIPT_DIR/packages/Brewfile"
 
+# このプラットフォームで必須のツール
+pkg_install_required "$SCRIPT_DIR/packages/tools.json"
+
 source "$SCRIPT_DIR/scripts/ai-tools.sh"
 select_and_install_ai_tools

@@ -71,6 +71,7 @@ fi
 
 export DRY_RUN ASSUME_YES MANIFEST_MODE
 
+source "$SCRIPT_DIR/scripts/packages.sh"
 source "$SCRIPT_DIR/scripts/uninstall-common.sh"
 source "$SCRIPT_DIR/scripts/uninstall-links.sh"
 source "$SCRIPT_DIR/scripts/uninstall-packages.sh"
