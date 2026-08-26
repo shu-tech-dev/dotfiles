@@ -5,20 +5,20 @@ nvim・tmux などの必須ツールとは異なり、環境によって不要�
 
 ## ファイル
 
-| ファイル | 役割 |
-|---------|------|
-| `packages/optional-apps.json` | アプリ定義 |
-| `scripts/optional-apps.sh` | インストール・シンボリックリンクのロジック |
+| ファイル                      | 役割                                       |
+| ----------------------------- | ------------------------------------------ |
+| `packages/optional-apps.json` | アプリ定義                                 |
+| `scripts/optional-apps.sh`    | インストール・シンボリックリンクのロジック |
 
 ## JSON スキーマ
 
 ```json
 {
-  "pkg":         "コマンド名 / brew パッケージ名",
-  "name":        "表示名",
-  "desc":        "説明",
-  "method":      "インストール方法",
-  "platforms":   ["対応プラットフォーム"],
+  "pkg": "コマンド名 / brew パッケージ名",
+  "name": "表示名",
+  "desc": "説明",
+  "method": "インストール方法",
+  "platforms": ["対応プラットフォーム"],
   "symlink_src": "dotfiles 内の設定ファイルパス",
   "symlink_dst": "リンク先のパス"
 }
@@ -26,18 +26,18 @@ nvim・tmux などの必須ツールとは異なり、環境によって不要�
 
 ### method の種類
 
-| method | 例 | 実行されるコマンド |
-|--------|----|--------------------|
-| `brew` | `"method": "brew"` | `brew install <pkg>` |
+| method      | 例                      | 実行されるコマンド          |
+| ----------- | ----------------------- | --------------------------- |
+| `brew`      | `"method": "brew"`      | `brew install <pkg>`        |
 | `brew-cask` | `"method": "brew-cask"` | `brew install --cask <pkg>` |
 
 ### platforms の種類
 
-| 値 | 環境 |
-|----|------|
-| `macos` | macOS |
+| 値      | 環境              |
+| ------- | ----------------- |
+| `macos` | macOS             |
 | `linux` | Linux（WSL 以外） |
-| `wsl` | WSL |
+| `wsl`   | WSL               |
 
 `platforms` を省略すると全環境で表示される。
 
@@ -47,11 +47,11 @@ nvim・tmux などの必須ツールとは異なり、環境によって不要�
 
 ```json
 {
-  "pkg":         "new-app",
-  "name":        "New App",
-  "desc":        "Description of the app",
-  "method":      "brew-cask",
-  "platforms":   ["macos"],
+  "pkg": "new-app",
+  "name": "New App",
+  "desc": "Description of the app",
+  "method": "brew-cask",
+  "platforms": ["macos"],
   "symlink_src": "~/dotfiles/.config/new-app",
   "symlink_dst": "~/.config/new-app"
 }

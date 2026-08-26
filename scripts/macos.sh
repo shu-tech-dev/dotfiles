@@ -13,34 +13,21 @@ setup_brew_path() {
 if ! command -v brew &>/dev/null; then
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   setup_brew_path
+  manifest_record homebrew "$(brew --prefix 2>/dev/null || echo /opt/homebrew)"
 fi
 
 # brewのパスを通す（現在のセッション）
 setup_brew_path
 
 # .zprofileにbrewのパスを追加（まだなければ）
-if ! grep -q "brew shellenv" ~/.zprofile 2>/dev/null; then
-  if [[ -f /opt/homebrew/bin/brew ]]; then
-    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
-  elif [[ -f /usr/local/bin/brew ]]; then
-    echo 'eval "$(/usr/local/bin/brew shellenv)"' >> ~/.zprofile
-  fi
+if [[ -f /opt/homebrew/bin/brew ]]; then
+  append_rc_line "$HOME/.zprofile" 'eval "$(/opt/homebrew/bin/brew shellenv)"' 'brew shellenv'
+elif [[ -f /usr/local/bin/brew ]]; then
+  append_rc_line "$HOME/.zprofile" 'eval "$(/usr/local/bin/brew shellenv)"' 'brew shellenv'
 fi
 
-# brew bundle
-brew bundle --file ~/dotfiles/packages/Brewfile
-
-# Docker (Colima経由)
-if ! command -v docker &>/dev/null; then
-  brew install docker docker-compose colima
-fi
+# brew bundle（新規に入ったformulaだけがマニフェストに記録される）
+run_brew_bundle "$SCRIPT_DIR/packages/Brewfile"
 
 source "$SCRIPT_DIR/scripts/ai-tools.sh"
 select_and_install_ai_tools
-
-# Colimaの起動（まだ起動していない場合）
-if command -v colima &>/dev/null; then
-  if ! colima status &>/dev/null; then
-    colima start
-  fi
-fi

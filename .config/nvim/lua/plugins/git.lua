@@ -17,6 +17,9 @@ return {
 	{
 		"sindrets/diffview.nvim",
 		cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewToggleFiles", "DiffviewFocusFiles", "DiffviewRefresh", "DiffviewFileHistory" },
+		keys = {
+			{ "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Diffview 開く" },
+		},
 		config = function()
 			require("diffview").setup({})
 		end,

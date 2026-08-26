@@ -4,6 +4,8 @@ return {
 		cmd = "Telescope",
 		keys = {
 			{ "<c-p>", function() require("telescope.builtin").find_files() end },
+			-- VS Code風のドロップダウンUIでコマンドパレットを開く（幅と高さを少し大きめに設定）
+			{ "<leader>p", function() require("telescope.builtin").commands(require("telescope.themes").get_dropdown({ layout_config = { width = 0.6, height = 0.6 } })) end, desc = "Command Palette" },
 		},
 		dependencies = {
 			"nvim-lua/plenary.nvim",
@@ -63,9 +65,9 @@ return {
 		"akinsho/toggleterm.nvim",
 		keys = { { "<c-t>", "<cmd>ToggleTerm<cr>" } },
 		opts = {
-			size = 20,
+			size = 50,
 			open_in_dir = "git",
-			direction = "float",
+			direction = "vertical",
 			open_mapping = [[<C-t>]],
 			insert_mappings = true,
 			terminal_mappings = true,

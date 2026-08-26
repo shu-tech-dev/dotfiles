@@ -28,14 +28,16 @@ _install_tool() {
 
   case "$method" in
     brew)
-      brew install "$pkg"
+      brew install "$pkg" && manifest_record brew "$pkg"
       ;;
     npm:*)
-      npm install -g "${method#npm:}"
+      npm install -g "${method#npm:}" && manifest_record npm "${method#npm:}"
       ;;
     curl:*)
       # インストーラースクリプトをダウンロードして実行
       curl -fsSL "${method#curl:}" | bash
+      # 独自インストーラは削除手順もツール固有なので、uninstall時は手動対応を促す
+      manifest_record manual "$pkg"
       ;;
     *)
       echo "Unknown install method: $method"
@@ -69,7 +71,12 @@ select_and_install_ai_tools() {
   if ! command -v fzf &>/dev/null; then
     echo "fzf not found. Installing all AI tools..."
     jq -r '.[] | "\(.pkg) \(.method)"' "$TOOLS_JSON" | while read -r pkg method; do
-      _install_tool "$pkg" "$method"
+      # 既に入っているものは触らない（記録もしないのでuninstallの対象外になる）
+      if _is_installed "$pkg" "$method"; then
+        echo "  ✓ $pkg is already installed"
+      else
+        _install_tool "$pkg" "$method"
+      fi
     done
     return
   fi

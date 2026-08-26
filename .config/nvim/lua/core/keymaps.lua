@@ -62,6 +62,12 @@ map({ "n" }, "<leader>v", ":vsplit<cr>", opts)
 map({ "n" }, "<leader>/", "gcc", { remap = true })
 map({ "n" }, "<leader>w", ":w<cr>")
 map({ "t" }, "<Esc>", [[<C-\><C-n>]], { noremap = true })
+-- 3ペインレイアウト再構築（Neo-tree + ターミナル）
+map({ "n" }, "<leader>W", function()
+  vim.cmd("Neotree show")
+  vim.cmd("ToggleTerm")
+end, { desc = "レイアウト再構築" })
+
 
 --map({ "n" } , "gh", ':lua require("noice.lsp").hover()<cr>', opts)
 -- map('n', 'gh', ':Lspsaga hover_doc<cr>', opts)

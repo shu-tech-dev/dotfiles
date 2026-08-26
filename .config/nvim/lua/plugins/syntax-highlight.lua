@@ -7,7 +7,8 @@ return {
       -- 使用したい言語を指定
       local languages = {
         "javascript", "jsx", "typescript", "tsx",
-        "python"
+        "python",
+        "markdown", "markdown_inline",  -- render-markdown.nvim 用
       }
       require("nvim-treesitter").setup({
         -- Install した言語パーサの配置場所 default のパスを明示的に指定

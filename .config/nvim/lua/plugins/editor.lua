@@ -6,11 +6,13 @@ return {
 		opts = {},
 	},
 	{
-		"iamcco/markdown-preview.nvim",
+		-- Neovim内でmarkdownをレンダリング
+		"MeanderingProgrammer/render-markdown.nvim",
 		ft = { "markdown" },
-		build = "cd app && npm install",
-		keys = {
-			{ "<leader>mp", "<cmd>MarkdownPreviewToggle<cr>", desc = "Markdown Preview" },
+		dependencies = {
+			"nvim-treesitter/nvim-treesitter",
+			"nvim-tree/nvim-web-devicons",
 		},
+		opts = {},
 	},
 }

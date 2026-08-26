@@ -39,10 +39,10 @@ _install_optional() {
 
   case "$method" in
     brew)
-      brew install "$pkg"
+      brew install "$pkg" && manifest_record brew "$pkg"
       ;;
     brew-cask)
-      brew install --cask "$pkg"
+      brew install --cask "$pkg" && manifest_record cask "$pkg"
       ;;
     *)
       echo "Unknown install method: $method"
@@ -51,15 +51,16 @@ _install_optional() {
   esac
 }
 
-# シンボリックリンクを作成（src/dstは ~/ 形式を展開）
+# シンボリックリンクを作成（既存の実体は退避され、張った先は記録される）
 _symlink_optional() {
-  local src dst
-  # ~ を $HOME に展開
-  src=$(eval echo "$1")
-  dst=$(eval echo "$2")
+  local src=$1 dst=$2
 
-  mkdir -p "$(dirname "$dst")"
-  ln -sfn "$src" "$dst"
+  # JSON側でsymlinkが未定義のエントリはスキップ
+  if [ -z "$src" ] || [ "$src" = "null" ]; then
+    return 0
+  fi
+
+  link_dotfile "$src" "$dst"
 }
 
 # fzfでインタラクティブにオプションアプリを選択してインストール
@@ -102,7 +103,8 @@ select_and_install_optional_apps() {
       method=$(echo "$entry" | jq -r '.method')
       src=$(echo "$entry" | jq -r '.symlink_src')
       dst=$(echo "$entry" | jq -r '.symlink_dst')
-      _install_optional "$pkg" "$method"
+      # 既に入っているものは触らない（記録もしないのでuninstallの対象外になる）
+      _is_installed_optional "$pkg" "$method" || _install_optional "$pkg" "$method"
       _symlink_optional "$src" "$dst"
     done
     return

@@ -8,11 +8,11 @@
     "mounts":   ["$HOME/.claude", "$HOME/.claude.json"]
   },
   {
-    "pkg":      "gemini-cli",
-    "name":     "Gemini CLI",
-    "desc":     "Google's AI CLI",
+    "pkg":      "antigravity-cli",
+    "name":     "Antigravity CLI",
+    "desc":     "Google Antigravity CLI",
     "method":   "brew",
-    "yolo_cmd": "gemini --yolo",
+    "yolo_cmd": "agy --dangerously-skip-permissions",
     "mounts":   ["$HOME/.gemini"]
   },
   {

@@ -22,7 +22,5 @@ source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 # PATH
 export PATH="$HOME/dotfiles/bin:$PATH"
 
-# aliases
-alias aisb='bash ~/dotfiles/.devcontainer/ai-sandbox/run.sh'
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 export PATH="$HOME/.local/bin:$PATH"
