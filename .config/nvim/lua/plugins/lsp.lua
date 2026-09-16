@@ -29,9 +29,8 @@ return {
 			},
 		},
 		keys = {
-			{ "gh", "<cmd>lua vim.lsp.buf.hover()       <CR>" },
-			{ "gd", "<cmd>lua vim.lsp.buf.definition()  <CR>" },
-			{ "gD", "<cmd>lua vim.lsp.buf.declaration() <CR>" },
+			{ "gd", "<cmd>lua vim.lsp.buf.definition()  <CR>", desc = "Go to definition" },
+			{ "gD", "<cmd>lua vim.lsp.buf.declaration() <CR>", desc = "Go to declaration" },
 		},
 	},
 	{
@@ -49,6 +48,17 @@ return {
 				run_on_start = true,
 			})
 		end,
+	},
+	{
+		-- Neovim 設定の Lua ファイルで vim.* の型定義を lua_ls に読み込ませる
+		"folke/lazydev.nvim",
+		ft = "lua",
+		opts = {
+			library = {
+				-- vim.uv の型定義
+				{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+			},
+		},
 	},
 	{
 		-- lsp を用いた補完サジェスト機能を提供する
@@ -104,6 +114,18 @@ return {
 				-- インストール時に lua を使用する
 				implementation = "lua",
 			},
+			sources = {
+				-- lazydev を補完候補に追加（require のモジュール名など）
+				default = { "lazydev", "lsp", "path", "snippets", "buffer" },
+				providers = {
+					lazydev = {
+						name = "LazyDev",
+						module = "lazydev.integrations.blink",
+						-- LSP の候補より上に表示
+						score_offset = 100,
+					},
+				},
+			},
 		},
 	},
 	{
@@ -119,6 +141,7 @@ return {
 				function()
 					require("actions-preview").code_actions()
 				end,
+				desc = "Code action",
 			},
 		},
 		opts = {},
@@ -142,6 +165,7 @@ return {
 				function()
 					require("hover").hover()
 				end,
+				desc = "Hover",
 			},
 		},
 	},

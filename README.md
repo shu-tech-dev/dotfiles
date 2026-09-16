@@ -12,6 +12,27 @@ macOS・Linux に対応。スクリプトが Homebrew・パッケージ・設定
 
 導入したものは `~/.local/state/dotfiles/manifest.tsv` に記録され、既存の設定ファイルを置き換える場合は `~/.local/state/dotfiles/backups/` に退避されます。
 
+## アップグレード
+
+```sh
+./upgrade.sh --dry-run   # 何が更新されるかだけ表示
+./upgrade.sh             # 対話でカテゴリを選択
+```
+
+**インストール済みのものだけ**を最新にします。入っていないものを新たに入れることはありません（それは install.sh の役割）。
+
+| カテゴリ | 対象 |
+|---------|------|
+| `--packages` | Brewfile の formula とその依存（neovim が使う luajit など）、`packages/*.json` の cask・npm・インストーラ |
+| `--nvim` | lazy.nvim のプラグイン、nvim-treesitter のパーサー、Mason のパッケージ |
+| `--tmux` | TPM で入れた tmux プラグイン |
+| `--node` | nvm の Node.js LTS（グローバル npm パッケージを引き継ぎ、古いバージョンは残す） |
+| `--all` | 上記すべて |
+
+オプション: `-n/--dry-run`、`-h/--help`
+
+`--nvim` を実行すると `.config/nvim/lazy-lock.json` が更新されます。自動ではコミットしないので、差分を確認してからコミットしてください。
+
 ## アンインストール
 
 ```sh
@@ -37,13 +58,6 @@ install.sh 以前に導入したなど記録が無い場合は fallback モー�
 
 ## コマンド
 
-### 開発環境
-
-| コマンド | 説明 |
-|---------|------|
-| `devup` | tmux開発セッションを起動（nvim + claude + terminal） |
-| `devdown` | tmux開発セッションを終了 |
-
 ### tmux キーバインド（prefix: `Ctrl+t`）
 
 | キー | 説明 |
@@ -53,13 +67,3 @@ install.sh 以前に導入したなど記録が無い場合は fallback モー�
 | `r` | tmux設定をリロード |
 | `e` | 現在のペイン以外をすべて閉じる |
 | `Ctrl+Shift+←/→` | ウィンドウの順番を入れ替え |
-
-### devupのレイアウト
-
-```
-┌──────────────┬──────────────┐
-│              │   claude     │
-│    nvim      ├──────────────┤
-│              │   terminal   │
-└──────────────┴──────────────┘
-```

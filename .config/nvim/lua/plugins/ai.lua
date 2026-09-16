@@ -13,7 +13,7 @@ return {
         end,
         keys = {
             -- { "<leader>cc", "<cmd>ClaudeCode<cr>", desc = "Claude Codeを切り替え" },
-            { "<leader>cc", "<cmd>ClaudeCodeFocus<cr>", desc = "Claudeにフォーカス" },
+            { "<leader>cc", "<cmd>ClaudeCodeFocus<cr>", desc = "Focus Claude" },
             -- { "<leader>ar", "<cmd>ClaudeCode --resume<cr>", desc = "セッションを再開" },
             -- { "<leader>as", "<cmd>ClaudeCodeSend<cr>", desc = "選択範囲を送信", mode = "v" },
         },

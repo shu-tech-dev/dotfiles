@@ -7,6 +7,27 @@ return {
 				options = {
 					transparency = true,
 				},
+				highlights = {
+					-- bufferline のアクティブタブの下線色に使われるので VS Code の青にする
+					TabLineSel = { bg = "#0078d4" },
+					-- gitgraph のデフォルト（gruvbox 系）の色を onedark のパレットに合わせる
+					GitGraphBranch1 = { fg = "${blue}" },
+					GitGraphBranch2 = { fg = "${purple}" },
+					GitGraphBranch3 = { fg = "${yellow}" },
+					GitGraphBranch4 = { fg = "${green}" },
+					GitGraphBranch5 = { fg = "${red}" },
+					GitGraphHash = { fg = "${comment}" },
+					GitGraphTimestamp = { fg = "${comment}" },
+					GitGraphAuthor = { fg = "${cyan}" },
+					GitGraphBranchName = { fg = "${red}", bold = true },
+					GitGraphBranchTag = { fg = "${yellow}" },
+					GitGraphBranchMsg = { fg = "${fg}" },
+					-- diffview で VS Code のように左（変更前）を赤・右（変更後）を緑にする色（git.lua の hooks で使用）
+					DiffviewVscodeDelete = { bg = "#4a2f35" },
+					DiffviewVscodeDeleteText = { bg = "#7a3a44" },
+					DiffviewVscodeAdd = { bg = "#2f4a36" },
+					DiffviewVscodeAddText = { bg = "#3d6b47" },
+				},
 			})
 			vim.cmd("colorscheme onedark")
 		end,

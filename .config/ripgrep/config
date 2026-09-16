@@ -1,0 +1,4 @@
+# ripgrep の共通設定（.zshrc の RIPGREP_CONFIG_PATH で読み込む）
+# --hidden 指定時も検索対象から外すディレクトリ
+--glob=!.git/
+--glob=!node_modules/

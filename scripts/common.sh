@@ -34,6 +34,7 @@ link_dotfile ~/dotfiles/.config/nvim ~/.config/nvim
 link_dotfile ~/dotfiles/.config/tmux ~/.config/tmux
 link_dotfile ~/dotfiles/.config/starship.toml ~/.config/starship.toml
 link_dotfile ~/dotfiles/.config/fd/ignore ~/.config/fd/ignore
+link_dotfile ~/dotfiles/.config/ripgrep ~/.config/ripgrep
 link_dotfile ~/dotfiles/.config/lazygit ~/.config/lazygit
 link_dotfile ~/dotfiles/.zshrc ~/.zshrc
 

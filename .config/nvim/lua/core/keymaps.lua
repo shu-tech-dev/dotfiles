@@ -11,7 +11,7 @@ vim.g.maplocalleader = " "
 ------------------------------------------------------------------------
 -- Insert Mode
 ------------------------------------------------------------------------
-map({ "i" }, "jj", "<esc>", { desc = "Insert を抜ける" })
+map({ "i" }, "jj", "<esc>", { desc = "Exit insert mode" })
 
 ------------------------------------------------------------------------
 -- Normal & Visual Mode
@@ -48,25 +48,18 @@ map({ "n" }, "<c-k>", "<c-w>k")
 -- 右のペインに移動
 map({ "n" }, "<c-l>", "<c-w>l")
 -- 全選択
-map({ "n" }, "<leader>a", "ggVG")
--- バッファを閉じる
-map({ "n" }, "<leader>q", ":q<cr>")
+map({ "n" }, "<leader>a", "ggVG", { desc = "Select all" })
 -- Quick Fix
 map({ "n" }, "<leader>.", "<cmd>lua vim.lsp.buf.code_action()<CR>")
 -- Rename
-map({ "n" }, "<leader>2", "<cmd>lua vim.lsp.buf.rename()<CR>")
+map({ "n" }, "<leader>2", "<cmd>lua vim.lsp.buf.rename()<CR>", { desc = "Rename" })
 -- ペイン分割
-map({ "n" }, "<leader>s", ":split<cr>", opts)
-map({ "n" }, "<leader>v", ":vsplit<cr>", opts)
+map({ "n" }, "<leader>s", ":split<cr>", { noremap = true, silent = true, desc = "Split horizontally" })
+map({ "n" }, "<leader>v", ":vsplit<cr>", { noremap = true, silent = true, desc = "Split vertically" })
 -- コメントアウト
-map({ "n" }, "<leader>/", "gcc", { remap = true })
-map({ "n" }, "<leader>w", ":w<cr>")
+map({ "n" }, "<leader>/", "gcc", { remap = true, desc = "Toggle comment" })
+map({ "n" }, "<leader>w", ":w<cr>", { desc = "Save" })
 map({ "t" }, "<Esc>", [[<C-\><C-n>]], { noremap = true })
--- 3ペインレイアウト再構築（Neo-tree + ターミナル）
-map({ "n" }, "<leader>W", function()
-  vim.cmd("Neotree show")
-  vim.cmd("ToggleTerm")
-end, { desc = "レイアウト再構築" })
 
 
 --map({ "n" } , "gh", ':lua require("noice.lsp").hover()<cr>', opts)
@@ -75,8 +68,8 @@ end, { desc = "レイアウト再構築" })
 --map({ "n" } , "gn", ":lua vim.diagnostic.goto_next()<cr>", opts)
 --map({ "n" } , "gp", ":lua vim.diagnostic.goto_prev()<cr>", opts)
 --map({ "n" } , "<c-e>", ':lua require("nvim-tree.api").tree.focus()<cr>', opts)
---map({ "n" } , "<tab>", ":BufferLineCycleNext<cr>", opts)
---map({ "n" } , "<s-tab>", ":BufferLineCyclePrev<cr>", opts)
+map({ "n" } , "<tab>", ":BufferLineCycleNext<cr>", opts)
+map({ "n" } , "<s-tab>", ":BufferLineCyclePrev<cr>", opts)
 -- map({ "n" }, "<leader>]", ":lua vim.lsp.buf.definition()<cr>", opts)
 -- map({ "n" }, "<leader>[", ":lua vim.lsp.buf.type_definition()<cr>", opts)
 -- map({ "n" }, "<leader>2", ":lua vim.lsp.buf.rename()<cr>", opts)
@@ -101,4 +94,4 @@ map({ "v" }, "<leader>/", "gc") -- コメントアウト
 -- Delete --------------------------------------------------------------
 map({ "v" }, "d", '"_d') -- 削除時に yank しないようにする
 -- コメントアウト
-map({ "v" }, "<leader>/", "gc", { remap = true })
+map({ "v" }, "<leader>/", "gc", { remap = true, desc = "Toggle comment" })

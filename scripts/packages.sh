@@ -1,19 +1,19 @@
 #!/bin/bash
 
 # パッケージのインストール方式を定義する唯一の場所。
-# install.sh と uninstall.sh の両方がこのファイルを読む。
+# install.sh・uninstall.sh・upgrade.sh がこのファイルを読む。
 #
-# 「入れる」「消す」「入っているか」を method ごとに1箇所へ集めてあるのは、
+# 「入れる」「消す」「上げる」「入っているか」を method ごとに1箇所へ集めてあるのは、
 # install 側だけ直して uninstall 側を忘れる取りこぼしを防ぐため。
 # 実際、以前は ai-tools.sh に brew-cask が無く、cask を brew として記録した結果
 # uninstall で永久に外れない状態になっていた。
 #
-#   method         manifest型   入れる                     消す
-#   brew           brew         brew install PKG           brew uninstall PKG
-#   brew-cask      cask         brew install --cask PKG    brew uninstall --cask PKG
-#   npm:PKG        npm          npm install -g PKG         npm uninstall -g PKG
-#   curl:URL       file         curl URL | bash            paths を削除
-#   archive:URL    file         zip を展開して配置          paths を削除
+#   method         manifest型   入れる                     消す                       上げる
+#   brew           brew         brew install PKG           brew uninstall PKG         brew upgrade PKG
+#   brew-cask      cask         brew install --cask PKG    brew uninstall --cask PKG  brew upgrade --cask PKG
+#   npm:PKG        npm          npm install -g PKG         npm uninstall -g PKG       npm install -g PKG@latest
+#   curl:URL       file         curl URL | bash            paths を削除                curl URL | bash（再実行）
+#   archive:URL    file         zip を展開して配置          paths を削除                zip を展開して配置（再実行）
 #
 # curl / archive は配布元が独自にファイルを撒くので、消すべきものを
 # JSON の paths に宣言させる。宣言があるので manual 送りにしなくて済む。
@@ -109,6 +109,30 @@ pkg_install() {
       _pkg_record_paths "$json" "$pkg" ||
         echo "  ! $pkg: paths 未宣言のため uninstall で削除できません" >&2
       ;;
+    *)
+      echo "Unknown install method: $method" >&2
+      return 1
+      ;;
+  esac
+}
+
+# ------------------------------------------------------------------ アップグレード
+
+# pkg_upgrade PKG METHOD JSON — 入っているものを最新にする。run 経由なので --dry-run も効く。
+# 入っているかの判定は呼び出し側（pkg_is_installed）で行う。
+pkg_upgrade() {
+  local pkg=$1 method=$2 json=$3
+
+  # pkg_install と同じ理由で、独自インストーラに profile を書き換えさせない
+  export PATH="$HOME/.local/bin:$PATH"
+
+  case "$method" in
+    brew)      run brew upgrade "$pkg" ;;
+    brew-cask) run brew upgrade --cask "$pkg" ;;
+    npm:*)     run npm install -g "${method#npm:}@latest" ;;
+    # 独自インストーラ・zip 配布はバージョン確認の手段が無いので、入れ直して最新にする
+    curl:*)    run bash -c "curl -fsSL '${method#curl:}' | bash" ;;
+    archive:*) run _pkg_install_archive "${method#archive:}" "$json" "$pkg" ;;
     *)
       echo "Unknown install method: $method" >&2
       return 1

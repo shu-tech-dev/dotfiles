@@ -33,6 +33,7 @@ _fallback_symlink_candidates() {
     "$HOME/.config/tmux" \
     "$HOME/.config/starship.toml" \
     "$HOME/.config/fd/ignore" \
+    "$HOME/.config/ripgrep" \
     "$HOME/.zshrc" \
     "$HOME/.config/ghostty" \
     "$HOME/.config/karabiner/karabiner.json"; do
